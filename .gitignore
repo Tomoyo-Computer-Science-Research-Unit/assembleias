@@ -1,0 +1,22 @@
+.venv/
+__pycache__/
+.pytest_cache/
+node_modules/
+.next/
+out/
+frontend/test-results/
+frontend/playwright-report/
+frontend/tsconfig.tsbuildinfo
+data/raw/
+.claude/
+*.log
+data/*/photos/
+data/*/snapshot.json
+data/*.log
+# Copies of frontend/data/<uf>/ made by frontend/scripts/use-uf.sh before each build
+frontend/lib/static-data.generated.json
+frontend/lib/static-votacoes/
+frontend/lib/static-deputados/
+frontend/public/fotos/
+frontend/out-casas/
+frontend/out-all/

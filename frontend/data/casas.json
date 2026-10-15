@@ -1,0 +1,7 @@
+{
+  "_doc": "Assembleias publicadas, na ordem do seletor do cabeçalho. slug = uf em minúsculas (é o nome da pasta de dados frontend/data/<slug> e data/<slug>). A casa com root=true mora em /assembleias/; as demais em /assembleias/<slug>/. Cada uma precisa de um adaptador de fonte no backend (backend/app/casas.py) e de textos em frontend/lib/uf.ts. Lido pelo ETL, pelo frontend, pelos scripts de build e pelo deploy.",
+  "casas": [
+    { "uf": "RJ", "slug": "rj", "sigla": "ALERJ", "estado": "Rio de Janeiro", "root": true },
+    { "uf": "SP", "slug": "sp", "sigla": "ALESP", "estado": "São Paulo", "root": false }
+  ]
+}

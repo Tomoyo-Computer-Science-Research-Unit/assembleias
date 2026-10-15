@@ -1,0 +1,1005 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Tokens compartilhados com tomoyo.systems: tinta sobre papel, escala de cinzas sem cor de marca. */
+:root {
+  --ink: #0e0e0e;
+  --sumi: #1c1c1c;
+  --char: #2e2e2e;
+  --slate: #4a4a4a;
+  --ash: #6e6e6e;
+  --smoke: #707070;
+  --fog: #bdbdbd;
+  --mist: #dcdcdc;
+  --haze: #ebebeb;
+  --bone: #f4f4f3;
+  --paper: #fbfbfa;
+  --line: rgba(14, 14, 14, 0.14);
+  --line-strong: rgba(14, 14, 14, 0.55);
+  /* Piora e melhora: vermelho e verde opacos, usados com parcimônia */
+  --worse: #9c4a43;
+  --better: #4e7a5c;
+  --halo: 0 0 1px var(--paper), 1px 1px 0 var(--paper), -1px -1px 0 var(--paper), 0 0 18px var(--paper);
+  --wrap: 1180px;
+  --gutter: clamp(20px, 4vw, 56px);
+  --ease: cubic-bezier(0.2, 0.7, 0.1, 1);
+  --sans: "Helvetica Neue", Helvetica, Arial, "Hiragino Sans", "Yu Gothic", sans-serif;
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  --ink: #f4f4f3;
+  --sumi: #e6e6e5;
+  --char: #cfcfce;
+  --slate: #b0b0b0;
+  --ash: #8f8f8f;
+  --smoke: #838383;
+  --fog: #4a4a4a;
+  --mist: #2e2e2e;
+  --haze: #1a1a1a;
+  --bone: #141414;
+  --paper: #0b0b0b;
+  --line: rgba(244, 244, 243, 0.14);
+  --line-strong: rgba(244, 244, 243, 0.5);
+  --worse: #c4746c;
+  --better: #7faa8d;
+  color-scheme: dark;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--sumi);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.85;
+  letter-spacing: 0.02em;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "palt";
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+dl,
+dd {
+  margin: 0;
+  font-weight: inherit;
+}
+
+::selection {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+:focus-visible {
+  outline: 1px solid var(--ink);
+  outline-offset: 3px;
+}
+
+/* --- Tipografia --------------------------------------------------------------- */
+
+.wrap {
+  width: min(var(--wrap), 100% - var(--gutter) * 2);
+  margin-inline: auto;
+}
+
+.wordmark {
+  font-family: var(--font-mincho), serif;
+  letter-spacing: 0.2em;
+  font-weight: 500;
+}
+
+.display {
+  font-family: var(--font-archivo), var(--sans);
+  font-stretch: 125%;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+}
+
+.serif {
+  font-family: var(--font-mincho), serif;
+}
+
+.eyebrow {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--ash);
+}
+
+.num {
+  font-family: var(--font-archivo), var(--sans);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+.small-caps {
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* Barras de rolagem quadradas, pretas, chapadas: Plan 9 / Unix dos anos 80–90. */
+/* No Chromium, scrollbar-color desliga os pseudo-elementos ::-webkit-scrollbar e devolve o
+   polegar arredondado; a propriedade padrão fica só para o Firefox. */
+@supports not selector(::-webkit-scrollbar) {
+  * {
+    scrollbar-width: auto;
+    scrollbar-color: var(--ink) var(--paper);
+  }
+}
+
+::-webkit-scrollbar {
+  width: 14px;
+  height: 14px;
+  background: var(--paper);
+}
+
+::-webkit-scrollbar-track {
+  background: var(--paper);
+  border-left: 1px solid var(--ink);
+  border-top: 1px solid var(--ink);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--ink);
+  border: 2px solid var(--paper);
+  border-radius: 0;
+}
+
+::-webkit-scrollbar-corner {
+  background: var(--paper);
+  border-left: 1px solid var(--ink);
+  border-top: 1px solid var(--ink);
+}
+
+::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+/* --- Componentes --------------------------------------------------------------- */
+
+.rule {
+  border-top: 1px solid var(--line);
+}
+
+.rule-strong {
+  border-top: 1px solid var(--line-strong);
+}
+
+.tag {
+  display: inline-block;
+  min-width: 64px;
+  padding: 1px 12px;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-mincho), serif;
+  font-size: 13px;
+  font-style: italic;
+  letter-spacing: 0.06em;
+  text-align: center;
+  line-height: 1.7;
+}
+
+.tag--ghost {
+  background: transparent;
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--line-strong);
+  background: transparent;
+  color: var(--ink);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: var(--cur-pointer);
+}
+
+.btn:hover,
+.btn--solid {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+
+.btn:disabled {
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.field > label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--ash);
+}
+
+.field select,
+.field input {
+  height: 34px;
+  min-width: 0;
+  width: 100%;
+  padding: 0 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.field select {
+  background-image: linear-gradient(45deg, transparent 50%, var(--ink) 50%), linear-gradient(135deg, var(--ink) 50%, transparent 50%);
+  background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  padding-right: 34px;
+}
+
+.field select:disabled,
+.field input:disabled {
+  opacity: 0.4;
+}
+
+.segmented {
+  display: inline-flex;
+  border: 1px solid var(--line-strong);
+}
+
+.segmented button {
+  height: 32px;
+  padding: 0 12px;
+  background: transparent;
+  color: var(--slate);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  border: 0;
+  border-right: 1px solid var(--line);
+  cursor: var(--cur-pointer);
+  transition: background 0.3s var(--ease), color 0.3s var(--ease);
+}
+
+.segmented button:last-child {
+  border-right: 0;
+}
+
+.segmented button[aria-pressed="true"] {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.segmented button:disabled {
+  opacity: 0.35;
+  cursor: var(--cur-arrow);
+}
+
+/* Botão liga/desliga, mesma métrica do segmentado */
+.toggle {
+  height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--line-strong);
+  background: transparent;
+  color: var(--slate);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: var(--cur-pointer);
+  transition: background 0.3s var(--ease), color 0.3s var(--ease);
+}
+
+.toggle[aria-pressed="true"] {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+
+/* Tabela "ruled" no estilo das fichas do tomoyo.systems */
+.ruled {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.ruled th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--paper);
+  padding: 8px 10px;
+  border-top: 1px solid var(--line-strong);
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ash);
+  white-space: nowrap;
+}
+
+.ruled td {
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+  color: var(--char);
+}
+
+.ruled tr:hover td {
+  background: var(--bone);
+}
+
+.ruled .right,
+.ruled th.right {
+  text-align: right;
+}
+
+.ruled td.num {
+  color: var(--ink);
+}
+
+.ruled .faint {
+  color: var(--ash);
+}
+
+/* Lista de definições em linhas (dt/dd) */
+.table-line {
+  display: grid;
+  grid-template-columns: minmax(9em, 13em) 1fr;
+  border-bottom: 1px solid var(--line);
+}
+
+.table-line:first-child {
+  border-top: 1px solid var(--line-strong);
+}
+
+.table-line dt {
+  padding: 9px 16px 9px 0;
+  font-family: var(--font-mincho), serif;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  color: var(--ink);
+}
+
+.table-line dd {
+  padding: 9px 0 9px 16px;
+  font-size: 12.5px;
+  line-height: 1.7;
+  color: var(--char);
+}
+
+@media (max-width: 640px) {
+  .table-line {
+    grid-template-columns: 1fr;
+  }
+
+  .table-line dd {
+    padding: 0 0 14px;
+  }
+}
+
+/* Recharts: cores via tokens para funcionar nos dois temas */
+.chart .recharts-cartesian-grid line {
+  stroke: var(--line);
+}
+
+.chart .recharts-cartesian-axis-line,
+.chart .recharts-cartesian-axis-tick-line {
+  stroke: var(--line-strong);
+}
+
+.chart .recharts-cartesian-axis-tick-value {
+  fill: var(--ash);
+  font-family: var(--font-archivo), var(--sans);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+
+.chart .recharts-reference-area rect {
+  fill: var(--ink);
+}
+
+.chart .recharts-tooltip-cursor {
+  stroke: var(--line-strong);
+}
+
+.chart-tooltip {
+  min-width: 180px;
+  padding: 10px 12px;
+  border: 1px solid var(--line-strong);
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.chart-tooltip strong {
+  display: block;
+  font-family: var(--font-mincho), serif;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+}
+
+.chart-tooltip .row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.chart-tooltip .row span:last-child {
+  font-family: var(--font-archivo), var(--sans);
+  font-variant-numeric: tabular-nums;
+}
+
+input[type="range"] {
+  width: 100%;
+  height: 1px;
+  margin: 18px 0;
+  background: var(--line-strong);
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  width: 14px;
+  height: 14px;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  background: var(--paper);
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: var(--cur-pointer);
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  background: var(--paper);
+  cursor: var(--cur-pointer);
+}
+
+/* --- Casca de uma tela só: cabeçalho, palco, barra de status ------------------------ */
+
+.app {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.app__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  height: 48px;
+  padding: 0 var(--gutter);
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.app__main {
+  min-height: 0;
+  padding: 10px var(--gutter);
+}
+
+.statusbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  height: 28px;
+  padding: 0 var(--gutter);
+  border-top: 1px solid var(--line);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ash);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.kbd {
+  display: inline-block;
+  min-width: 15px;
+  margin-right: 5px;
+  padding: 0 4px;
+  border: 1px solid var(--line-strong);
+  font-size: 9px;
+  line-height: 14px;
+  text-align: center;
+  letter-spacing: 0.05em;
+  color: var(--ink);
+}
+
+.screen {
+  display: grid;
+  gap: 8px;
+  height: 100%;
+  min-height: 0;
+  transition: opacity 0.15s;
+}
+
+/* Esperando as séries do recorte (um arquivo por indicador). */
+.screen.is-loading {
+  opacity: 0.55;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  border: 1px solid var(--line-strong);
+  background: var(--paper);
+}
+
+.panel__head {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 34px;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--line);
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ash);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.panel__head > :first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.panel__head b {
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.panel__body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 12px;
+}
+
+.panel__body--flush {
+  padding: 0;
+}
+
+.panel__body--fill {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.panel__foot {
+  flex: none;
+  padding: 6px 12px;
+  border-top: 1px solid var(--line);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  color: var(--ash);
+}
+
+/* Menu selecionável (lista de indicadores, territórios) */
+.menu {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.menu button {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: baseline;
+  gap: 10px;
+  width: 100%;
+  padding: 5px 12px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: transparent;
+  color: var(--char);
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  text-align: left;
+  cursor: var(--cur-pointer);
+}
+
+.menu button > span:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.menu button:hover:not([aria-selected="true"]) {
+  background: var(--bone);
+}
+
+.menu button[aria-selected="true"] {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.menu .num {
+  font-size: 12px;
+}
+
+.menu .delta {
+  min-width: 56px;
+  text-align: right;
+  font-size: 11px;
+}
+
+.menu button[aria-selected="true"] .faint,
+.menu button[aria-selected="true"] .delta {
+  color: var(--paper);
+  opacity: 0.75;
+}
+
+.chart-fill {
+  flex: 1;
+  min-height: 0;
+}
+
+.worse {
+  color: var(--worse);
+}
+
+.better {
+  color: var(--better);
+}
+
+.menu button[aria-selected="true"] .worse,
+.menu button[aria-selected="true"] .better {
+  color: var(--paper);
+  opacity: 0.85;
+}
+
+/* Palco fixo, como um jogo: no mínimo 1280×720. Em janelas menores a página rola, o layout não cede. */
+html,
+body {
+  height: 100%;
+}
+
+body {
+  overflow: auto;
+}
+
+.app {
+  min-width: 1280px;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 720px;
+}
+
+/* --- Efeito de impressão (print-fx) --------------------------------------------------- */
+
+/* Textura de impressão (filtro SVG definido no layout): só em texto e bordas, nunca em
+   gráficos ou no mapa, para o filtro não ser recalculado a cada frame. */
+html.fx .panel__head,
+html.fx .panel__foot,
+html.fx .menu,
+html.fx .ruled,
+html.fx .table-line,
+html.fx .statusbar,
+html.fx .app__header nav,
+html.fx .toggle,
+html.fx .segmented,
+html.fx .btn,
+html.fx .field,
+html.fx .detail {
+  filter: url(#print-fx-light);
+}
+
+html.fx[data-theme="dark"] .panel__head,
+html.fx[data-theme="dark"] .panel__foot,
+html.fx[data-theme="dark"] .menu,
+html.fx[data-theme="dark"] .ruled,
+html.fx[data-theme="dark"] .table-line,
+html.fx[data-theme="dark"] .statusbar,
+html.fx[data-theme="dark"] .app__header nav,
+html.fx[data-theme="dark"] .toggle,
+html.fx[data-theme="dark"] .segmented,
+html.fx[data-theme="dark"] .btn,
+html.fx[data-theme="dark"] .field,
+html.fx[data-theme="dark"] .detail {
+  filter: url(#print-fx-dark);
+}
+
+/* --- Cursores, como no tomoyo.systems: a seta do Plan 9 (devmouse.c), a mão e o I do X11 (hand2 e
+   xterm, da cursor font) e as nossas mãos para arrastar. 1 bit, 16 px, com cópia 2x para telas
+   densas; as imagens vêm do layout (BASE_PATH). Só com mouse de verdade. ------------------------- */
+
+:root {
+  --cur-arrow: default;
+  --cur-pointer: pointer;
+  --cur-text: text;
+  --cur-grab: grab;
+  --cur-grabbing: grabbing;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  :root {
+    --cur-arrow: var(--cur-arrow-img);
+    --cur-pointer: var(--cur-pointer-img);
+    --cur-text: var(--cur-text-img);
+    --cur-grab: var(--cur-grab-img);
+    --cur-grabbing: var(--cur-grabbing-img);
+  }
+
+  [data-theme="dark"] {
+    --cur-grab: var(--cur-grab-dark-img);
+    --cur-grabbing: var(--cur-grabbing-dark-img);
+  }
+
+  html {
+    cursor: var(--cur-arrow);
+  }
+
+  input,
+  textarea,
+  [contenteditable="true"] {
+    cursor: var(--cur-text);
+  }
+
+  a,
+  button,
+  [role="button"],
+  [role="option"],
+  summary,
+  label,
+  select,
+  input[type="checkbox"],
+  input[type="radio"],
+  input[type="submit"],
+  input[type="button"],
+  .cursor-pointer {
+    cursor: var(--cur-pointer);
+  }
+
+  button:disabled,
+  input:disabled,
+  [aria-disabled="true"] {
+    cursor: var(--cur-arrow);
+  }
+
+  /* Arrastáveis: a mão aberta e, ao segurar, a fechada. */
+  input[type="range"],
+  .grabbable {
+    cursor: var(--cur-grab);
+  }
+
+  input[type="range"]:active,
+  .grabbable:active {
+    cursor: var(--cur-grabbing);
+  }
+}
+
+/* O mon é tinta sobre papel; no tema escuro inverte. */
+:root[data-theme="dark"] img.mon {
+  filter: invert(1);
+}
+
+/* Lista com barra proporcional (rankings de autores, destinos, funções). */
+.barlist {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.barlist__row {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+  text-align: left;
+  font: inherit;
+  background: none;
+  cursor: inherit;
+}
+.barlist__row:hover,
+.barlist__row.is-selected {
+  background: var(--haze);
+}
+.barlist__rank {
+  font-size: 10px;
+  color: var(--ash);
+}
+.barlist__label {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding-bottom: 5px;
+  font-size: 12px;
+  line-height: 1.25;
+}
+.barlist__sub {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--ash);
+}
+.barlist__bar {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--ink);
+  opacity: 0.8;
+}
+.barlist__value {
+  font-size: 11.5px;
+  white-space: nowrap;
+}
+.photo {
+  width: 44px;
+  height: 56px;
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.05);
+  border: 1px solid var(--line);
+  background: var(--haze);
+}
+
+/* Seletor de ano no cabeçalho dos painéis. */
+.yearselect {
+  min-width: 0;
+  max-width: 100%;
+  height: 28px;
+  padding: 0 24px 0 8px;
+  border: 1px solid var(--line-strong);
+  background: var(--paper);
+  color: var(--ink);
+  font: 500 10.5px/1 var(--sans);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--ink) 50%), linear-gradient(135deg, var(--ink) 50%, transparent 50%);
+  background-position: calc(100% - 13px) 11px, calc(100% - 8px) 11px;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+}
+.yearselect:focus-visible {
+  outline: 1px solid var(--ink);
+  outline-offset: 1px;
+}
+
+/* Grade de meses (presença): anos nas linhas, meses nas colunas. */
+.monthgrid {
+  display: grid;
+  grid-template-columns: 44px repeat(12, minmax(0, 1fr)) 48px;
+  gap: 2px;
+  font-size: 10.5px;
+}
+.monthgrid > span {
+  display: grid;
+  place-items: center;
+  height: 22px;
+  border: 1px solid var(--line);
+  color: var(--ink);
+}
+.monthgrid > .head {
+  border-color: transparent;
+  color: var(--ash);
+  letter-spacing: 0.1em;
+}
+.monthgrid > .empty {
+  border-style: dashed;
+  color: var(--ash);
+}
+.voto-sim { color: var(--better); }
+.voto-nao { color: var(--worse); }
+.photo--sm {
+  width: 36px;
+  height: 46px;
+}
+
+/* Painéis que preenchem a linha rolam por dentro: listas, menus e tabelas compridas. */
+.panel__body--fill {
+  overflow: auto;
+}
+
+/* Linhas quebram; nada de reticências. */
+.menu button > span:first-child {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+}
+.panel__head > span:first-child {
+  min-width: 0;
+  white-space: normal;
+}
+.barlist__label > span {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+}
+
+/* Tabelas estreitas: menos respiro entre colunas, nada de rolagem horizontal. */
+.ruled--tight {
+  table-layout: fixed;
+  width: 100%;
+}
+.ruled--tight th,
+.ruled--tight td {
+  padding-left: 6px;
+  padding-right: 6px;
+}
+
+/* Campo de busca com a mesma cara dos seletores. */
+input.yearselect {
+  padding-right: 8px;
+  background-image: none;
+  text-transform: none;
+  letter-spacing: 0.04em;
+  font-size: 11.5px;
+}
+input.yearselect::placeholder {
+  color: var(--ash);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 10.5px;
+}
+
+/* Duas versões do ícone: traço preto no claro, traço branco no escuro. */
+:root[data-theme="dark"] .theme-light,
+:root:not([data-theme="dark"]) .theme-dark {
+  display: none;
+}
+
+/* O mon é tinta sobre papel; no tema escuro inverte. */
+:root[data-theme="dark"] img.mon {
+  filter: invert(1);
+}
