@@ -296,7 +296,12 @@ def title_name(nome: str) -> str:
 # --- presence ------------------------------------------------------------------------------------------
 
 def presenca_status(situacao: str) -> str:
-    """Map the portal's text to: presente | falta | extraordinaria | justificada | licenca | nao_deliberativa | outro."""
+    """Map the portal's text to: presente | falta | extraordinaria | justificada | licenca | fora |
+    nao_deliberativa | outro.
+
+    justificada also covers absences on the house's business (comissão de representação, CPI,
+    audiência pública, "a serviço do Poder Legislativo", "dispensado"); fora is a deputy away from the
+    seat (secretary of state, suspended mandate), which does not count as a session at all."""
     s = norm_name(situacao)
     if s == "PRESENTE":
         return "presente"
@@ -306,9 +311,12 @@ def presenca_status(situacao: str) -> str:
         return "falta"
     if s.startswith("AUSENCIA EM SESSAO EXTRAORDINARIA"):
         return "extraordinaria"
-    if s.startswith("JUSTIFICADA"):
+    if s.startswith("AFASTAMENTO") or s.startswith("PUNICAO"):
+        return "fora"
+    if s.startswith("JUSTIFICADA") or s.startswith("DISPENSAD") or s.startswith("EM COMISSAO") or s.startswith("EM AUDIENCIA") \
+            or s.startswith("A SERVICO") or s.startswith("REPRESENTANDO"):
         return "justificada"
-    if "LICEN" in s or "AFASTAD" in s:
+    if "LICEN" in s:
         return "licenca"
     return "outro"
 

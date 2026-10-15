@@ -73,7 +73,7 @@ function sp(ctx: MethodContext): MethodSection[] {
     },
     {
       title: "Presença",
-      body: `A presença vem sessão a sessão, como o portal a mostra: presente, falta não justificada, falta justificada, ausência em sessão extraordinária e sessão não deliberativa. Faltas do mês são as não justificadas mais as ausências em sessões extraordinárias; abonadas são as justificadas e licenças; sessões não deliberativas não contam. Foram consultados ${formatInt(num(s, "presenca.meses_consultados"))} meses de mandato, de ${mes(str(s, "presenca.primeiro_mes"))} a ${mes(str(s, "presenca.ultimo_mes"))}, em ${formatInt(num(s, "presenca.sessoes"))} sessões. O portal não traz dados de alguns meses (abril e maio de 2020, durante as sessões remotas); esses meses ficam vazios.`
+      body: `A presença vem sessão a sessão, como o portal a mostra. Faltas do mês são as marcas “Não Justificada” e “Ausência em Sessão Extraordinária”; abonadas são as justificadas, as licenças e as ausências a serviço da Casa (comissão de representação, CPI, audiência pública, dispensa); sessões não deliberativas e os períodos de afastamento do mandato (secretário de Estado, suspensão) não contam. Foram consultados ${formatInt(num(s, "presenca.meses_consultados"))} meses de mandato, de ${mes(str(s, "presenca.primeiro_mes"))} a ${mes(str(s, "presenca.ultimo_mes"))}, em ${formatInt(num(s, "presenca.sessoes"))} sessões. O portal não devolve sessões de abril a julho de 2020, de abril a agosto de 2021 nem da maior parte dos meses de janeiro e julho, de recesso; esses meses ficam vazios.`
     },
     {
       title: "Proposições",

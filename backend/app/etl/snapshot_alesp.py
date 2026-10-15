@@ -130,7 +130,7 @@ def monthly_presence(linhas: list[dict], nomes: dict[str, str]) -> list[dict]:
     acc: dict[tuple[str, int, int], Counter] = defaultdict(Counter)
     for l in linhas:
         st = presenca_status(l["situacao"])
-        if st == "nao_deliberativa":
+        if st in ("nao_deliberativa", "fora"):
             continue
         i = did(l["matricula"])
         c = acc[(i, int(l["data"][:4]), int(l["data"][5:7]))]

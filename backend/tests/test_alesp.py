@@ -72,6 +72,9 @@ def test_presence_marks_and_months():
     assert presenca_status("Sessão não Deliberativa - com quórum regimental para abertura da sessão") == "nao_deliberativa"
     assert presenca_status("Não Justificada") == "falta" and presenca_status("Justificada") == "justificada"
     assert presenca_status("Ausência em Sessão Extraordinária") == "extraordinaria"
+    assert presenca_status("Em Comissão de Representação") == "justificada" and presenca_status("Dispensado(a)") == "justificada"
+    assert presenca_status("Licença-Saúde") == "licenca"
+    assert presenca_status("Afastamento temporário de exercente de mandato eletivo para cargo em comissão") == "fora"
     linhas = [{"matricula": 7, "sessao_id": i, "data": f"2025-06-{i:02d}", "situacao": s} for i, s in
               enumerate(["Presente", "Não Justificada", "Justificada", "Ausência em Sessão Extraordinária",
                          "Sessão não Deliberativa - com quórum regimental para abertura da sessão"], start=1)]
