@@ -58,6 +58,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+        {/* Discord flutuante comum aos sites do g0v (servido pela landing, na raiz do domínio). */}
+        <script src="/discord-float.js" defer />
       </head>
       <body className="bg-paper text-sumi">
         <div className="app">

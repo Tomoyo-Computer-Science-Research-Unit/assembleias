@@ -1003,3 +1003,8 @@ input.yearselect::placeholder {
 :root[data-theme="dark"] img.mon {
   filter: invert(1);
 }
+
+/* Discord flutuante do g0v: acima da barra de status. */
+:root {
+  --g0v-discord-bottom: 34px;
+}
