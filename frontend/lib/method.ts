@@ -42,7 +42,7 @@ function rj(ctx: MethodContext): MethodSection[] {
     },
     {
       title: "Presença",
-      body: `A ALERJ publica uma tabela por mês com as faltas de cada deputado às sessões deliberativas e os dias das faltas. A tabela não distingue falta justificada de não justificada; todas contam como faltas aqui. Foram lidas ${formatInt(num(s, "presenca.tabelas_mensais"))} tabelas, de ${mes(str(s, "presenca.primeiro_mes"))} a ${mes(str(s, "presenca.ultimo_mes"))}, somando ${formatInt(num(s, "presenca.sessoes_deliberativas"))} sessões deliberativas. Não há tabela de agosto, mês seguinte ao recesso de julho; a tabela de cada mês sai no mês seguinte.`
+      body: `A ALERJ publica uma tabela por mês com as faltas de cada deputado às sessões deliberativas e os dias das faltas. A tabela não distingue falta justificada de não justificada; todas contam como faltas aqui. Foram lidas ${formatInt(num(s, "presenca.tabelas_mensais"))} tabelas, de ${mes(str(s, "presenca.primeiro_mes"))} a ${mes(str(s, "presenca.ultimo_mes"))}, somando ${formatInt(num(s, "presenca.sessoes_deliberativas"))} sessões deliberativas. Janeiro não tem tabela, e julho só tem em 2020; a tabela de cada mês sai no mês seguinte.`
     },
     {
       title: "Proposições",
