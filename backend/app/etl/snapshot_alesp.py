@@ -426,8 +426,17 @@ def run(args) -> int:
     log("SP: proposições ...")
     prop_rows, docs, raw_counts = load_proposicoes(dl, from_year, refresh)
     unmatched_authors: Counter = Counter()
+    # Author ids that the registry does not know (a deputy can have more than one): match the name.
+    by_name: dict[str, list[str]] = defaultdict(list)
+    for i, n in nomes.items():
+        by_name[norm_name(n)].append(i)
     for p in prop_rows:
-        p["autores_ids"] = [author_ids[a] for a in p.pop("_autores") if a in author_ids]
+        ids = []
+        for a, nome in zip(p.pop("_autores"), p["autores"]):
+            i = author_ids.get(a) or (by_name[norm_name(nome)][0] if len(by_name.get(norm_name(nome), [])) == 1 else None)
+            if i and i not in ids:
+                ids.append(i)
+        p["autores_ids"] = ids
         p["autores_outros"] = False
         if not p["autores_ids"]:
             for a in p["autores"]:
