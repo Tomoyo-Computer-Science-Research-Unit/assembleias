@@ -31,10 +31,10 @@ import httpx
 from .. import config
 from ..http import Downloader, TextCache
 from ..models import Deputado
-from ..names import NameResolver, norm, slug
+from ..names import NameResolver
 from ..parsers.alerj import (MESES, Perfil, TIPO_COD, domino_json, fold, parse_perfil, parse_presenca, parse_quemsao,
                              parse_search_rows, party_on, prop_from_code, view_rows)
-from ..parsers.alerj_do import (IOERJ, AtaDO, calendar_dates, edition_url, has_plenary_record, parse_records, parte_ii_guids,
+from ..parsers.alerj_do import (IOERJ, calendar_dates, edition_url, has_plenary_record, parse_records, parte_ii_guids,
                                 pdf_url)
 from .aggregates import lado_vencedor, legislatura_of
 
