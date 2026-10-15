@@ -52,7 +52,7 @@ def parse_quemsao(page: str, base: str = "https://www.alerj.rj.gov.br") -> list[
         img = re.findall(r'<img src="([^"]+)"', before)
         foto = img[-1] if img else None
         out.append(Card(id=i, nome=clean(m.group(2)), partido=(clean(p[-1]) or None) if p else None,
-                        foto=(base + foto) if foto and foto.startswith("/") else foto))
+                        foto=htmllib.unescape((base + foto) if foto and foto.startswith("/") else foto) if foto else None))
     return out
 
 

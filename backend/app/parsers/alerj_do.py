@@ -80,8 +80,8 @@ _SIDE = {"sim": "sim", "nao": "nao", "não": "nao", "abstencao": "abstencao", "a
 # A printed list names the deputies after "os Senhores Deputados" or a colon; spoken roll calls
 # ("Deputado X. Votou “não” no grupo.") have neither and are not lists.
 LISTA = re.compile(
-    r"(?:Vot(?:aram|ou)\s*[“\"”]?\s*(sim|n[ãa]o|absten[çc][ãa]o)\s*[”\"“]?\s*,?\s*(?:(?:o|os)?\s*(?:senhor(?:es)?|srs?\.)\s*deputad[oa]s?\s*:?|:)"
-    r"|(Abstiveram-se|Absteve-se)\s+(?:o|os)?\s*(?:senhor(?:es)?|srs?\.)\s*deputad[oa]s?\s*:?)\s*", re.I)
+    r"(?:Vot(?:aram|ou)\s*[“\"”]?\s*(sim|n[ãa]o|absten[çc][ãa]o)\s*[”\"“]?\s*,?\s*(?:(?:o|os|a|as)?\s*(?:senhor(?:es|as?)?|sras?\.|srs?\.)\s*deputad[oa]s?\s*:?|:)"
+    r"|(Abstiveram-se|Absteve-se)\s+(?:o|os|a|as)?\s*(?:senhor(?:es|as?)?|sras?\.|srs?\.)\s*deputad[oa]s?\s*:?)\s*", re.I)
 # Words that end a list of names: the totals, the next list, the result or a speaker.
 _END = re.compile(r"\n\s*(?:Tota(?:l|is)\b|Vot(?:aram|ou)\b|Abstiveram|Absteve|Est[áa]\s|O\s+SR\.|A\s+SRA\.|Proclamo|Anuncia"
                   r"|Em\s+vota|Vamos\s|(?:Os|As|O|A)\s+[a-zà-ú])")

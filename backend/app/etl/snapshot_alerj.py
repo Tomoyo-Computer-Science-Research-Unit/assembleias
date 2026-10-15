@@ -63,6 +63,7 @@ ALIASES_ALERJ: dict[str, str] = {
     "professor josemar": "prof josemar",
     "felipe poubel": "filippe poubel",
     "marcus miller": "marcos muller",
+    "poubel": "filippe poubel",
 }
 
 
