@@ -165,3 +165,67 @@ ALESP ~9.600 pedidos (~2 h, quase tudo presença); ALERJ ~5.200 pedidos (~2 h, q
 Oficial, ~4 GB baixados, ~150 MB de texto guardado). As rodadas diárias relêem listas, meses recentes
 e edições novas (minutos). No servidor, copiar `data/raw/` de uma máquina que já rodou evita a
 primeira rodada longa.
+
+## Outras assembleias
+
+Levantamento de 16/10/2026 das casas que ainda não estão no projeto. São **25 casas**, não 26:
+24 Assembleias estaduais (27 UFs menos RJ e SP, menos o DF) mais a Câmara Legislativa do DF. Sondagem ao vivo
+com curl, 1 pedido por segundo, poucas chamadas por casa; nada foi baixado para `data/raw/`. Contagens são
+`total_entries` das APIs no dia. "n/v" = não verificado. Legenda das colunas: **V** voto nominal por deputado
+em plenário, **P** presença por sessão ou mês, **A** proposições com autoria.
+
+### Tabela
+
+| UF | Casa e URL | Sistema | V | P | A | Cobertura e exemplo que funcionou |
+|---|---|---|---|---|---|---|
+| AC | ALEAC `sapl.al.ac.leg.br` | SAPL (API REST, JSON) | parcial: 709 votos em 572 registros | sim: 3.356 presenças de sessão, 1.041 da ordem do dia | sim: 19.341 matérias, 18.755 autorias | sessões 2000-05 a 2026-10; votos até 2026. `/api/sessao/votoparlamentar/?page_size=1` |
+| AL | ALE-AL `sapl.al.al.leg.br` | SAPL | 2.003 votos em 217 registros | só 20 da ordem do dia | sim: 15.579 / 15.515 | sessões 2014-02 a **2019-12-13**: instância parada, sistema atual n/v |
+| AM | ALEAM `sapl.al.am.leg.br` (site `aleam.am.gov.br` não resolve) | SAPL | **sim: 132.199 votos em 6.582 registros** | sim: 26.617 + 7.401 | sim: 79.224 / 79.547 | sessões 2015-02 a 2026-10; último registro de votação 16/09/2026. `/api/sessao/registrovotacao/?page_size=1` |
+| AP | ALEAP `al.ap.leg.br`, `elegis.al.ap.leg.br` | eLegis em implantação (aviso na página: dados em migração) + portal antigo | n/v | n/v | n/v (HTML) | Dados abertos só administrativos (licitações, contratos, remuneração; CSV/PDF). Pautas e atas em HTML |
+| BA | ALBA `al.ba.gov.br` | n/v | n/v | n/v | n/v | Resolve DNS (200.187.0.224) mas conexão expira em 20 s e 30 s, de dois pedidos. Pode ser bloqueio de IP; testar de outra rede |
+| CE | ALECE `transparencia.al.ce.gov.br/consultas-gerais/votacao-nominal` | Portal de transparência próprio (Laravel) | **sim, por votação: PDF + XLSX**, 31ª legislatura (02/2023 a 07/2026), 60 linhas na lista | n/v | só em texto na coluna matéria ("Autoria da Mesa Diretora") | O XLSX é um relatório formatado ("RELATÓRIO DE VOTAÇÃO": Sim, Não, Abstenção, Deputados, Partidos), não uma tabela. O download dá 403 sem `Referer` da própria página. Exemplo: `/uploads/votacao_nominal_materia_csv/LsiCA1ugMvcXaT7NqVX6IChXPu9wBok6mNgagP5D.xlsx` |
+| DF | CLDF `dados.cl.df.gov.br`, `ple.cl.df.gov.br` | CKAN + API pública do PLE | não: "Painel de Votação" é um Power BI incorporado | n/v | **sim**: CKAN `proposicoes` com JSON e CSV por ano (1991 a 2020) e API PLE até 2025 | `POST https://ple.cl.df.gov.br/pleservico/api/public/proposicao/filter?page=0&size=1` com `{"ano":2025}` devolve `autoria: "Deputado Wellington Luiz"` (texto), `dataLeitura`. Os arquivos CKAN redirecionam (302) para URL S3 assinada de 1 h. Há `indicadores-legislativos` em XLSX semestral |
+| ES | ALES `al.es.gov.br` | Sistema próprio (ASP.NET) | n/v | página "Frequência no Plenário" existe; sem tabela no HTML inicial, provavelmente carregada por JS | n/v (`/Proposicao`, pesquisa em formulário) | `/Transparencia/DadosAbertos` lista só despesas (favorecido, elemento, empenho) |
+| GO | ALEGO `portal.al.go.leg.br` | n/v | n/v | n/v | n/v | O nome não resolve daqui (`al.go.leg.br`, `portal.al.go.leg.br`, `transparencia.al.go.leg.br`); o site aparece em busca. Repetir |
+| MA | ALEMA `al.ma.leg.br`, `sistemas.al.ma.leg.br/transparencia` | SAPL legado (Zope, `sapl.al.ma.leg.br:8080/sapl`) + transparência em JSF | n/v | n/v | n/v | `sapl.al.ma.leg.br/api/...` devolve a SPA Angular (HTML), não JSON. Pautas e atas de sessão em páginas de transparência |
+| MG | ALMG `dadosabertos.almg.gov.br` | API própria v2 (Swagger em `/api/ajuda/swagger/endpoints/lastest`, JSON, sem chave) | **não**: o detalhe da reunião traz pauta e resultado, sem voto por deputado | não há endpoint no Swagger (só reuniões de comissão e participação em comissão) | **sim**, só proposições em tramitação: autor em texto ("Deputada Beatriz Cerqueira  PT") | `/api/v2/proposicoes/pesquisa/direcionada?tipo=PL&ano=2024&formato=json&p=1` (1.212 PL de 2024); `/api/v2/plenario/reunioes/pesquisa?ini=20240401&fim=20240430&formato=json`; `/api/v2/legislaturas/{n}/deputados/em_exercicio`. O parâmetro de paginação é `p`; sem `tipo` o servidor responde "Parâmetro de paginação inválido" |
+| MS | ALEMS `al.ms.gov.br`, `sgpl.consulta.al.ms.gov.br/sgpl-publico`, `transparencia2.al.ms.gov.br` | SGPL próprio (SPA, "Validando acesso...") | n/v | n/v | n/v | A SPA tem backend JSON provável, não descoberto |
+| MT | ALMT `api.al.mt.gov.br` | API própria com OAuth2 (`/api/v1/ssl/sessao-plenaria`, `.../proposicao-votada`, `.../ordem-dia`, `/parlamentar`, `/legislatura`) | provável (endpoint `proposicao-votada`), n/v | n/v | n/v | `401 access_denied: OAuth2 authentication required`; credenciais "fornecidas pela instituição". O SAPL `sapl.al.mt.leg.br` está vazio (5 sessões, 1 matéria). Pedir credencial por LAI |
+| PA | ALEPA `alepa.pa.gov.br/Legislativo/VotacoesNominais` | Sistema próprio (ASP.NET MVC, DevExpress) | formulário Ano e Mês, tabela HTML | n/v | n/v (Proposições, Pautas, Resumo do Plenário e Atas em HTML) | Out/2026 respondeu "Nenhuma votação nominal foi encontrada no mês informado"; um mês com votação não foi testado |
+| PB | ALPB `sapl.al.pb.leg.br` | SAPL | **sim: 17.148 votos em 56.539 registros** (há registros de teste: "TESTE REQUIMENTO", 2018) | sim: 15.683 + 13.387 | sim: 151.359 matérias, 142.623 autorias | sessões 2013-08 a 2026-10; voto de 2025 (Veto 366/2025) |
+| PE | ALEPE `dadosabertos.alepe.pe.gov.br` | API própria v1 (JSON ou CSV com `?formato=`) + `proposicoes.alepe.pe.gov.br` | não | não | não na API | A API só tem `parlamentares`, `cargos`, `lotacoes`, `servidores`, `remuneracao`, `licitacoes`, `contratos`. Proposições e reuniões plenárias só em páginas (n/v) |
+| PI | ALEPI `sapl.al.pi.leg.br` | SAPL | sim: 3.314 votos em 4.500 registros | sim: 10.097 + 6.081 | sim: 21.421 / 21.967 | sessões 2008-02 a 2026-10; votos de 2026 (PLC 7/2026) |
+| PR | ALEP `transparencia.assembleia.pr.leg.br`, `webservices.assembleia.pr.leg.br/api/public` | API JHipster (só `http://`; `https` dá 403) + portal de transparência | páginas "Controle de votação" (formulário, 1 tabela) n/v | página "Presença em plenário" (formulário) n/v | API `proposicao/campos` responde (tipos PRO, PLC, PDL...); `proposicao/filtrar` devolveu 400 com a chamada que tentei | Documentação em `/servicos/dados-abertos`: só proposição e norma legal. A rota `/deputado/campos` dá 404 |
+| RN | ALRN `al.rn.leg.br` | n/v | n/v | n/v | n/v | Resolve (201.20.70.164) mas conexão expira; `sapl.al.rn.leg.br` não resolve |
+| RO | ALERO `sapl.al.ro.leg.br` | SAPL | **sim: 44.379 votos em 15.923 registros** | sim: 25.248 + 23.554 | sim: 57.115 / 57.055 | sessões 2012-02 a 2026-10; voto de 2026 (PLC 205/2026) |
+| RR | ALERR `sapl.al.rr.leg.br` | SAPL | não (0 registros) | quase não (24 e 48) | sim: 19.237 matérias, 24.149 autorias | sessões 2021-08 a 2026-10 |
+| RS | ALERGS `al.rs.gov.br`, `proweb.procergs.com.br`, `epro.al.rs.gov.br` | Proweb/ePro (Procergs) + portal DNN | "Planilhas de Votação" por proposição, formato n/v | n/v | n/v (`pesquisa_proposicao.asp`, formulário) | `dadosabertos.al.rs.gov.br` não resolve. Pesquisa de planilhas anterior a 2007 em página separada |
+| SC | ALESC `portalelegis.alesc.sc.gov.br` | e-Legis próprio, HTML renderizado no servidor | n/v: as páginas de Ordem do Dia que vi não mostram resultado nem voto | **sim, por sessão**: `/sessoes-plenarias/<id>/presenca` lista cada deputado e a situação ("Ausência justificada") | sim: `/sessoes-plenarias/<id>/ordem-do-dia` traz "PL./0158/2025 ... Autoria Deputada Paulinha" | Lista de sessões paginada (`/sessoes-plenarias?page=N`); exemplo: 96ª Sessão Ordinária, 15/10/2026, id `5ae25`. Sem API; o id é um hash curto |
+| SE | ALESE `al.se.leg.br` | WordPress, sem sistema legislativo exposto | n/v | n/v | n/v | Só "Atas das Sessões Legislativas" e áudios |
+| TO | ALETO `sapl.al.to.leg.br` | SAPL | não (0) | não (0) | sim: 14.533 matérias, 14.540 autorias | sessões 2020-02 a 2026-05 |
+
+SAPL, para o leitor genérico: `https://sapl.al.<uf>.leg.br/api/{sessao/sessaoplenaria, sessao/registrovotacao,
+sessao/votoparlamentar, sessao/sessaoplenariapresenca, sessao/presencaordemdia, materia/materialegislativa,
+materia/autoria, parlamentares/parlamentar}/?page_size=N`, JSON paginado (`pagination.total_entries`), sem chave.
+As instâncias redirecionam o `next` para `http://`. `votoparlamentar.voto` assume Sim, Não, Abstenção, Não Votou.
+Os 8 hosts SAPL com dados são AC, AL, AM, PB, PI, RO, RR, TO; os testados que não resolvem foram AP, MS, RN, SE, GO, BA,
+CE, ES e PA com o padrão `sapl.al.<uf>.leg.br`; MA e MT estão no quadro acima.
+
+### Prioridade
+
+1. **Um leitor SAPL genérico liga cinco casas com voto, presença e autoria**: AM, RO, PB, PI, AC, nesta ordem
+   de volume (AM e RO têm ainda 2026 em curso; PB tem lixo de teste de 2018 a filtrar; AC tem poucos votos nominais).
+   O mesmo leitor liga RR e TO só para proposições, e AL só como histórico até 2019.
+   Limite do SAPL: `votoparlamentar` só existe para votação nominal registrada no painel; votação simbólica não tem
+   voto individual, como em ALERJ e ALESP. Falta conferir, casa a casa, se o painel é usado em todas as sessões.
+2. **Leitor próprio, API estável e só proposições**: DF (CKAN + API do PLE, autoria em texto), MG (API v2, autor em texto,
+   sem voto nominal), PR (API em http, rota `filtrar` por descobrir). PE tem API, mas sem dado legislativo.
+3. **Leitor próprio por raspagem, com voto ou presença**: CE (XLSX por votação desde 2023, único fora do SAPL
+   com voto por deputado em arquivo), PA (HTML mensal, a testar em mês com votação), SC (presença por sessão e
+   autoria em HTML; sem voto à vista).
+4. **Só PDF, ata ou diário, ou site sem dado estruturado**: AP (em migração), MA, MS (SPA a investigar), ES, RS
+   (planilhas), SE.
+5. **Não verificado**: BA e RN (expira a conexão daqui), GO (DNS), MT (existe API, exige credencial).
+
+Ressalva geral: a existência de um endpoint não prova cobertura. Em cada casa ligada, repetir o que se fez
+para ALERJ e ALESP: conferir os totais de cada votação contra o placar e contar sessões sem registro.
