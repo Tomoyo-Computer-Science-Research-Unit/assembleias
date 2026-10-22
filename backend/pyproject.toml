@@ -9,6 +9,7 @@ dependencies = [
     "beautifulsoup4>=4.12",
     "pillow>=10",
     "pdfplumber>=0.11",
+    "pypdfium2>=4",
 ]
 
 [project.optional-dependencies]
@@ -16,6 +17,13 @@ dev = ["pytest>=8", "flake8>=7", "mypy>=1.11", "ruff>=0.6"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["app*"]
 
 [tool.mypy]
 python_version = "3.12"
