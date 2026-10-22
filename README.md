@@ -1,4 +1,8 @@
+*This project has been created as part of the 42 curriculum by c3c4d4.*
+
 # Assembleias
+
+## Description
 
 Assembleias Legislativas do Rio de Janeiro (ALERJ) e de São Paulo (ALESP): votações nominais,
 presença em plenário e proposições de cada deputado estadual, da Tomoyo, dentro do
@@ -19,7 +23,11 @@ Fontes, contagens reais e ressalvas em `FINDINGS.md`.
 
 Sites: https://g0v.tomoyo.systems/assembleias/ (ALERJ) e https://g0v.tomoyo.systems/assembleias/sp/ (ALESP).
 
-## Layout
+Telas: Deputados (`/`), Votações (`/votacoes`), Presença (`/presenca`), Partidos (`/partidos`),
+Método (`/metodologia`), as mesmas nas duas casas. Teclas `1`–`5` trocam de tela, `u` troca de
+casa; setas, `v`, `e`, `r` por tela.
+
+### Layout
 
 ```text
 backend/app/
@@ -48,11 +56,9 @@ frontend/
 deploy/build-site.sh          roda no servidor, por cron, uma vez por dia; ETL e build das casas
 ```
 
-Telas: Deputados (`/`), Votações (`/votacoes`), Presença (`/presenca`), Partidos (`/partidos`),
-Método (`/metodologia`), as mesmas nas duas casas. Teclas `1`–`5` trocam de tela, `u` troca de
-casa; setas, `v`, `e`, `r` por tela.
+## Instructions
 
-## Setup
+### Setup
 
 ```bash
 cd backend && uv venv --python 3.12 .venv && uv pip install --python .venv/bin/python -e ".[dev]"
@@ -71,7 +77,7 @@ Build de produção de uma casa só: `NEXT_PUBLIC_UF=RJ NEXT_PUBLIC_BASE_PATH=/a
 ou `NEXT_PUBLIC_UF=SP NEXT_PUBLIC_BASE_PATH=/assembleias/sp npm run build`. As duas de uma vez, como no
 servidor: `ROOT=/assembleias sh scripts/build-all.sh`.
 
-## Deploy
+### Deploy
 
 O site vive em `g0v.tomoyo.systems/assembleias`, no nginx estático do g0v. O cron roda
 `/root/g0v/build-assembleias.sh` (cópia de `deploy/build-site.sh`, que se atualiza sozinha) todo dia:
@@ -80,3 +86,29 @@ publica a ALERJ em `/root/g0v/site/assembleias/` (rsync com `--exclude=/sp/`) e 
 `/root/g0v/site/assembleias/sp/`. Se o ETL de uma casa falha, ela segue com os dados commitados.
 A primeira rodada no servidor baixa o Diário Oficial e a presença da ALESP desde 2019 (horas);
 copiar `data/raw/` de uma máquina que já rodou o ETL evita isso.
+
+## Resources
+
+- ALERJ: a lista de deputados e os perfis em alerj.rj.gov.br; a tabela mensal de presenças e as
+  proposições nas bases Lotus Domino de alerjln1.alerj.rj.gov.br; o Diário Oficial, Parte II, na
+  Imprensa Oficial (ioerj.com.br), onde a ata de cada sessão imprime quem votou sim e não.
+- ALESP: a lista de votações no painel e o relatório em PDF de cada uma; a API do portal (presença em
+  plenário por sessão, detalhes dos deputados); os arquivos de proposituras e autores do portal de
+  dados abertos.
+- `FINDINGS.md`: fontes com URLs, contagens reais, ressalvas e o levantamento das outras 25 casas.
+- Repositório como-votou (Vereadores): mesma estrutura de backend e frontend.
+
+AI was used to scaffold the ETL (downloader with cache, text cache for the Diário Oficial, snapshot and export scripts), to write the parsers of the ALERJ pages, the Diário Oficial and the ALESP PDF reports and APIs, and the frontend shell; the result was reviewed against the sources listed above and tested with the fixtures in `backend/tests/fixtures` and the Playwright tests in `frontend/tests`.
+
+## Limitations
+
+Trabalho em andamento. Casas prontas: ALERJ (12ª e 13ª legislaturas, desde 01/02/2019) e ALESP (19ª
+e 20ª legislaturas, desde 15/03/2019). As outras 25 casas (24 Assembleias estaduais e a Câmara
+Legislativa do DF) foram só levantadas (fontes, sistemas, cobertura e prioridade em `FINDINGS.md`,
+seção "Outras assembleias") e ainda não entram no site.
+
+- Nas duas casas, as votações simbólicas, a maioria, não têm voto individual.
+- ALERJ: não há dados abertos nem registro do painel; a junção dos votos aos deputados é por nome.
+- ALESP: os relatórios de votação trazem só o nome do painel; presença, proposições e cadastro trazem
+  o código do deputado.
+- Detalhes, contagens reais e ressalvas em `FINDINGS.md`.
