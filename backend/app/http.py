@@ -62,6 +62,18 @@ class Downloader:
             time.sleep(wait)
         self._last = time.monotonic()
 
+    def cache_path(self, method: str, url: str, data: dict[str, str] | None = None) -> Path:
+        """Where the cache for this request lives; TextCache keeps its files beside it."""
+        return self._key(method, url, data)
+
+    def get_uncached(self, url: str) -> httpx.Response:
+        """Throttled GET that bypasses the body cache (the caller stores what it needs)."""
+        self._throttle()
+        self.requests_made += 1
+        r = self._client.get(url)
+        r.raise_for_status()
+        return r
+
     def fetch(self, url: str, *, data: dict[str, str] | None = None, refresh: bool = False) -> Fetched:
         method = "POST" if data is not None else "GET"
         base = self._key(method, url, data)
@@ -117,7 +129,7 @@ class TextCache:
         self.sub = sub
 
     def fetch(self, url: str, keep: Callable[[str], bool] | None = None) -> tuple[str, dict]:
-        base = self.dl._key("GET", url, None)
+        base = self.dl.cache_path("GET", url)
         base = base.parent / self.sub / base.name
         gz, meta = base.with_suffix(".txt.gz"), base.with_suffix(".json")
         if meta.exists():
@@ -127,10 +139,7 @@ class TextCache:
             return text, m
         if self.dl.offline:
             raise FileNotFoundError(f"offline and not cached: GET {url}")
-        self.dl._throttle()
-        self.dl.requests_made += 1
-        r = self.dl._client.get(url)
-        r.raise_for_status()
+        r = self.dl.get_uncached(url)
         accessed = datetime.now(timezone.utc).isoformat(timespec="seconds")
         sha = hashlib.sha256(r.content).hexdigest()
         if not r.content.startswith(b"%PDF"):
