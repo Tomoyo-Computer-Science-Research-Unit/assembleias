@@ -20,3 +20,4 @@ frontend/lib/static-deputados/
 frontend/public/fotos/
 frontend/out-casas/
 frontend/out-all/
+*.egg-info/
