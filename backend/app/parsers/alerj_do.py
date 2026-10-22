@@ -14,6 +14,7 @@ Reaching a PDF takes two requests:
 from __future__ import annotations
 
 import base64
+import binascii
 import re
 
 IOERJ = "https://www.ioerj.com.br/portal/modules/conteudoonline"
@@ -26,7 +27,7 @@ def calendar_dates(page: str) -> list[str]:
     for b in re.findall(r"do_seleciona_edicao\.php\?data=([A-Za-z0-9+/=]+)", page):
         try:
             s = base64.b64decode(b + "=" * (-len(b) % 4)).decode("ascii")
-        except Exception:
+        except (binascii.Error, ValueError, UnicodeDecodeError):
             continue
         if re.fullmatch(r"\d{8}", s):
             out.add(f"{s[:4]}-{s[4:6]}-{s[6:]}")
@@ -47,7 +48,7 @@ def parte_ii_guids(page: str) -> list[str]:
         try:
             for _ in range(3):
                 x = base64.b64decode(x + "=" * (-len(x) % 4)).decode("latin-1")
-        except Exception:
+        except (binascii.Error, ValueError, UnicodeDecodeError):
             continue
         guid = x[:36]
         if re.fullmatch(r"[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}", guid, re.I) and guid not in out:
